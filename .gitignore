@@ -1,7 +1,9 @@
 # Generated / large artifacts
 Codex.dmg
 app_asar/
+app_resources/
 work_dmg/
+work_version_check/
 build_native/
 build_native_opt/
 node_modules/

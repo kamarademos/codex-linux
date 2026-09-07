@@ -206,6 +206,8 @@ graph LR
 
 ## 🛠️ Building from Source
 
+Use Node.js 24, npm, Python 3, make, a C++20 compiler, and 7zip.
+
 ```bash
 # Clone
 git clone https://github.com/kamarademos/codex-linux.git

@@ -45,6 +45,39 @@ echo "Installing native build dependencies into ${BUILD_DIR}..."
     "@electron/rebuild"
 )
 
+# Codex ships 12.9.0, whose npm sources need newer V8 APIs. Backport the
+# compatibility fixes from better-sqlite3 12.11.1 before rebuilding on Linux.
+if [[ "${BETTER_SQLITE3_VERSION}" == "12.9.0" ]]; then
+  node - "${BUILD_DIR}/node_modules/better-sqlite3" <<'NODE'
+const fs = require('fs');
+const path = require('path');
+const replacements = [
+  ['src/util/helpers.cpp', '\t\tfunc,\n\t\t0,', '\t\tfunc,\n\t\tnullptr,'],
+  ['src/util/macros.cpp',
+    '#define OnlyAddon static_cast<Addon*>(info.Data().As<v8::External>()->Value())',
+    `#if defined(NODE_MODULE_VERSION) && NODE_MODULE_VERSION >= 146
+#define OnlyAddon static_cast<Addon*>(info.Data().As<v8::External>()->Value(0))
+#else
+#define OnlyAddon static_cast<Addon*>(info.Data().As<v8::External>()->Value())
+#endif`],
+  ['src/better_sqlite3.cpp',
+    '\tv8::Local<v8::External> data = v8::External::New(isolate, addon);',
+    `#if defined(NODE_MODULE_VERSION) && NODE_MODULE_VERSION >= 146
+\tv8::Local<v8::External> data = v8::External::New(isolate, addon, 0);
+#else
+\tv8::Local<v8::External> data = v8::External::New(isolate, addon);
+#endif`],
+];
+for (const [file, before, after] of replacements) {
+  const filePath = path.join(process.argv[2], file);
+  const source = fs.readFileSync(filePath, 'utf8');
+  if (source.includes(after)) continue;
+  if (!source.includes(before)) throw new Error(`SQLite compatibility patch did not match ${file}`);
+  fs.writeFileSync(filePath, source.replace(before, after));
+}
+NODE
+fi
+
 echo "Rebuilding better-sqlite3 and node-pty for Electron ${ELECTRON_VERSION} (${NATIVE_ARCH})..."
 (
   cd "${BUILD_DIR}"
