@@ -6,8 +6,8 @@
 
 **Unofficial native Linux packaging for OpenAI Codex Desktop**
 
-[![Latest Release Version](https://img.shields.io/github/v/release/cuongducle/codex-linux?style=flat-square&label=release)](https://github.com/cuongducle/codex-linux/releases/latest)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/cuongducle/codex-linux/release.yml?style=flat-square&branch=main)](https://github.com/cuongducle/codex-linux/actions)
+[![Latest Release Version](https://img.shields.io/github/v/release/kamarademos/codex-linux?style=flat-square&label=release)](https://github.com/kamarademos/codex-linux/releases/latest)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/kamarademos/codex-linux/release.yml?style=flat-square&branch=main)](https://github.com/kamarademos/codex-linux/actions)
 [![APT Repository](https://img.shields.io/badge/APT-install%20via%20repo-blue?style=flat-square)](#apt-repository-auto-updates)
 [![Platform Support](https://img.shields.io/badge/platform-amd64%20%7C%20arm64-lightgrey?style=flat-square)](#supported-platforms)
 
@@ -17,6 +17,12 @@ Linux, and repackages it as a native `.deb` and `.AppImage` — with Wayland sup
 rebuilt native modules, sandbox handling, and full desktop integration.
 
 </div>
+
+> [!NOTE]
+> **This is a fork of [cuongducle/codex-linux](https://github.com/cuongducle/codex-linux).**
+> It is maintained independently at [kamarademos/codex-linux](https://github.com/kamarademos/codex-linux)
+> and builds and publishes its own `.deb` / `.AppImage` packages and APT repository from this fork's
+> own GitHub Releases and Pages. All credit for the original packaging work goes to the upstream project.
 
 > [!IMPORTANT]
 > **THIS IS AN UNOFFICIAL BUILD. It is not affiliated with, endorsed by, or supported by OpenAI.**
@@ -67,7 +73,7 @@ rebuilt native modules, sandbox handling, and full desktop integration.
 The recommended path on Debian/Ubuntu — you get updates through `apt upgrade`:
 
 ```bash
-echo "deb [trusted=yes] https://cuongducle.github.io/codex-linux/ stable main" \
+echo "deb [trusted=yes] https://github.com/kamarademos/codex-linux/releases/latest/download/ ./" \
   | sudo tee /etc/apt/sources.list.d/codex-desktop.list
 sudo apt update && sudo apt install codex-desktop
 ```
@@ -75,12 +81,12 @@ sudo apt update && sudo apt install codex-desktop
 ### One-line install
 
 ```bash
-curl -fsSL https://cuongducle.github.io/codex-linux/install.sh | sudo bash
+curl -fsSL https://kamarademos.github.io/codex-linux/install.sh | sudo bash
 ```
 
 ### Manual `.deb`
 
-Grab the latest `.deb` from [**Releases**](https://github.com/cuongducle/codex-linux/releases/latest), then:
+Grab the latest `.deb` from [**Releases**](https://github.com/kamarademos/codex-linux/releases/latest), then:
 
 ```bash
 sudo dpkg -i codex-desktop-*.deb
@@ -92,7 +98,7 @@ sudo apt-get install -f   # pull in any missing dependencies
 **x86_64 / amd64:**
 
 ```bash
-wget https://github.com/cuongducle/codex-linux/releases/latest/download/codex-desktop-linux-x86_64.AppImage
+wget https://github.com/kamarademos/codex-linux/releases/latest/download/codex-desktop-linux-x86_64.AppImage
 chmod +x codex-desktop-linux-x86_64.AppImage
 ./codex-desktop-linux-x86_64.AppImage
 ```
@@ -202,7 +208,7 @@ graph LR
 
 ```bash
 # Clone
-git clone https://github.com/cuongducle/codex-linux.git
+git clone https://github.com/kamarademos/codex-linux.git
 cd codex-linux
 
 # Download the upstream DMG
@@ -268,8 +274,9 @@ bash scripts/smoke-verify.sh
 
 ## 🙏 Credits
 
-This project stands on the shoulders of the Linux community's earlier work packaging
-Electron-based AI desktop apps:
+This is a fork of **[cuongducle/codex-linux](https://github.com/cuongducle/codex-linux)** —
+all of the original packaging work is theirs. It also stands on the shoulders of the Linux
+community's earlier work packaging Electron-based AI desktop apps:
 
 - **[k3d3/claude-desktop-linux-flake](https://github.com/k3d3/claude-desktop-linux-flake)** — Nix flake approach; inspiration for native-addon stubbing and `app.asar` surgery techniques.
 - **[aaddrick/claude-desktop-debian](https://github.com/aaddrick/claude-desktop-debian)** — Debian packaging approach; inspiration for AppArmor profiles, Wayland handling, and Proxy-based Electron interception.
